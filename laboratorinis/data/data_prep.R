@@ -3,7 +3,7 @@ library(jsonlite)
 
 download.file("https://atvira.sodra.lt/imones/downloads/2022/monthly-2022.csv.zip", "temp")
 unzip("temp")
-raw <- read_csv2("monthly-2022.csv")
+raw <- read_delim("monthly-2022.csv", sep = ";")
 names(raw) <- c("code", "jarCode", "name", "municipality", "ecoActCode", "ecoActName", "month", "avgWage", "numInsured", "avgWage2", "numInsured2", "tax")
 
 codes <- raw %>%
