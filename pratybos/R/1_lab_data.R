@@ -74,13 +74,44 @@ p2 <- data %>%
   summarise(avg_wage = mean(avgWage), avg_insured = median(numInsured), total_tax = sum(tax)) %>%
   na.omit() %>%
   arrange(desc(avg_wage)) %>%
-  head(100) %>%
+  head(50) %>%
   ggplot(aes(x = avg_wage, y = total_tax, size = avg_insured, color = name)) +
   geom_point() +
-  # geom_smooth(aes(x = avg_wage, y = total_tax), method="glm", se=T) +
   theme(legend.position = "none")
 plot(p2)
 ggplotly(p2)
 
 
-## To do -
+## Simple regression example
+
+data_stage <- data %>%
+  group_by(code, name) %>%
+  summarise(avg_wage = mean(avgWage), avg_insured = median(numInsured), total_tax = sum(tax)) %>%
+  na.omit() %>%
+  arrange(desc(avg_wage)) %>%
+  head(100) 
+
+# using geom_smooth
+
+ggplot(data_stage) +
+  geom_point(aes(x = avg_wage, y = total_tax, size = avg_insured, color = name)) +
+  geom_smooth(aes(x = avg_wage, y = total_tax), method="glm", se=T) +
+  theme(legend.position = "none")
+
+ggsave("regression.png")
+
+# using glm and custom line
+
+reg <- glm(total_tax ~ avg_wage, data=data_stage)
+reg
+
+
+ggplot(data_stage, aes(x = avg_wage, y = total_tax, size = avg_insured, color = name)) +
+  geom_point() +
+  geom_abline(slope=reg$coefficients[2],
+              intercept=reg$coefficients[1],
+              color="red") +
+  theme(legend.position = "none")
+
+
+
