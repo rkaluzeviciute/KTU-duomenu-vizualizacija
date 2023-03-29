@@ -1,13 +1,17 @@
 library(tidyverse)
-library(jsonlite)
+# library(jsonlite)
+library(lubridate)
+library(plotly)
+
+### I paskaita
 
 # JSON
-download.file("https://atvira.sodra.lt/imones/downloads/2023/monthly-2023.json.zip", "temp")
-unzip("temp")
-list.files(getwd())
-df <- fromJSON("monthly-2023.json")
-file.remove("temp")
-file.remove("monthly-2023.json")
+# download.file("https://atvira.sodra.lt/imones/downloads/2023/monthly-2023.json.zip", "temp")
+# unzip("temp")
+# list.files(getwd())
+# df <- fromJSON("monthly-2023.json")
+# file.remove("temp")
+# file.remove("monthly-2023.json")
 
 # Lab Data
 data <- read_csv("../../laboratorinis/data/lab_sodra.csv")
@@ -47,3 +51,36 @@ data %>%
   theme_bw()
 
 ggsave("SB TURTO FONDAS.png", width = 10, height = 10)
+
+### II paskaita
+
+p1 <- data %>%
+  filter(code %in% top5$code) %>%
+  mutate(month = parse_date_time(month, "ym")) %>%
+  ggplot(aes(x = month, y = avgWage, color = name)) +
+  geom_line(size = 0.5, linetype = 2, alpha=0.4) + 
+  geom_point(color = "red") +
+  theme_bw()
+
+plot(p1)
+
+ggplotly(p1)
+
+# total wage by company
+# tax/wage ratio
+
+p2 <- data %>%
+  group_by(code, name) %>%
+  summarise(avg_wage = mean(avgWage), avg_insured = median(numInsured), total_tax = sum(tax)) %>%
+  na.omit() %>%
+  arrange(desc(avg_wage)) %>%
+  head(100) %>%
+  ggplot(aes(x = avg_wage, y = total_tax, size = avg_insured, color = name)) +
+  geom_point() +
+  # geom_smooth(aes(x = avg_wage, y = total_tax), method="glm", se=T) +
+  theme(legend.position = "none")
+plot(p2)
+ggplotly(p2)
+
+
+## To do -
