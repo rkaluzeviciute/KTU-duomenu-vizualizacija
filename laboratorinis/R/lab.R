@@ -25,7 +25,7 @@ write(raw_json, "lab_sodra.json")
 #1 uzduotis
 filtered_data=
   lab_sodra%>%
-  filter(grepl("68100", ecoActCode))
+  filter(grepl("681000", ecoActCode))
 
 library(ggplot2)
 ggplot(data = filtered_data, aes(x = avgWage)) +
