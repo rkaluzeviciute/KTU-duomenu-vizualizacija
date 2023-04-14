@@ -9,7 +9,7 @@
 
 Atsakymas:
 
-![histograma](img/pavyzdys1.png)
+![histograma](img/1.png)
 
 Išvados:
 
