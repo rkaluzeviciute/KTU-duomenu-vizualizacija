@@ -3,7 +3,8 @@ library(tidyverse)
 library(shinydashboard)
 
 ui <- dashboardPage(skin="green",
-                    dashboardHeader(title="Sodra"),
+                    dashboardHeader(title="Nuosavo nekilnojamojo turto pirkimas ir pardavimas",
+                                    titleWidth=1000),
                     dashboardSidebar(
                       selectizeInput(inputId = "imones_kodas",
                                      label="Įmonės kodas",
@@ -29,3 +30,5 @@ server <- function(input, output, session) {
   )
 }
 shinyApp(ui, server)
+
+
